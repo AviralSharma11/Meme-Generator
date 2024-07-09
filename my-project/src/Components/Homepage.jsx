@@ -73,7 +73,7 @@ function Homepage() {
 
           <div className="flex mb-4">
             <div className="mr-4">
-              <img
+              <img className="float-left"
                 src="https://i.pinimg.com/736x/f1/fd/e7/f1fde7eac3305de557a1e0b62f3eb943.jpg"
                 alt="Meme face 3"
                 style={{ height: "200px", width: "175px" }}
@@ -88,7 +88,7 @@ function Homepage() {
             <img
               src="https://cdn.vectorstock.com/i/1000v/43/13/guy-meme-face-for-any-design-isolated-eps-vector-11464313.jpg"
               alt="Meme face 4"
-              className="w-598px h-675px mx-auto"
+              className="mx-auto" style={{height:"20px"}}
             />
           </div>
         </div>
