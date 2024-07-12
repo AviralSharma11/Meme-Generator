@@ -1,7 +1,16 @@
+import { Routes, Route } from "react-router-dom";
 import Homepage from "./Components/Homepage"
+import Loading from "./Components/Loading";
+import Game from "./Components/Game";
 
 export default function App() {
   return (
-    <Homepage />
+    <div>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/loading" element={<Loading />} />
+          <Route path="/game" element={<Game />} />
+        </Routes>
+      </div>
   )
 }

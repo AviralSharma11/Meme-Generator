@@ -12,6 +12,9 @@ module.exports = {
       fontFamily: {
         irish: ['"Irish Grover"', 'cursive'],
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      }
     },
   },
   plugins: [],
