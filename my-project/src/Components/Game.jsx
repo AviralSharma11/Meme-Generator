@@ -5,9 +5,7 @@ import { toPng } from "html-to-image";
 import HeadingGame from "./HeadingGame";
 
 const MemeGenerator = () => {
-  const [texts, setTexts] = useState([
-    { text: "", x: 0, y: 0, font: "Arial", color: "#ffffff", size: "16px" },
-  ]);
+  const [texts, setTexts] = useState([]); // Initialize as an empty array
   const [image, setImage] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -31,9 +29,7 @@ const MemeGenerator = () => {
     reader.onloadend = () => {
       setImage(reader.result);
       setSelectedTemplate(null);
-      setTexts([
-        { text: "", x: 0, y: 0, font: "Arial", color: "#ffffff", size: "16px" },
-      ]);
+      setTexts([]); // Clear texts when a new image is uploaded
     };
     reader.readAsDataURL(file);
   };
@@ -93,9 +89,7 @@ const MemeGenerator = () => {
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
     setImage(null);
-    setTexts([
-      { text: "", x: 0, y: 0, font: "Arial", color: "#ffffff", size: "16px" },
-    ]);
+    setTexts([]); // Clear texts when a new template is selected
   };
 
   const handleFontChange = (index, newFont) => {
