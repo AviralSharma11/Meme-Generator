@@ -11,14 +11,18 @@ function Homepage() {
 
   return (
     <div>
+      <div
+        className="fixed top-0 left-0 w-full h-screen bg-center bg-cover flex items-center justify-center "
+        style={{
+          backgroundImage:
+            "url('https://wallpapers.com/images/hd/meme-faces-black-and-white-25itfr6sfshhawly.jpg')",
+          opacity: 0.75,
+          zIndex: -1,
+        }}
+      > </div>
       <HeaderHomepage />
-      <div className="w-screen flex items-center justify-center bg-black">
-        <div style={{ width: "919.74px" }}>
-          {/* HeaderHomepage is already included above */}
-        </div>
-      </div>
-      <div className="w-screen flex items-center justify-center bg-black">
-        <div className="flex flex-col bg-white p-4">
+      <div className="w-screen flex items-center justify-center">
+        <div className="flex flex-col bg-white opacity-95 p-4" style={{width:"700px"}}>
           <div className="flex justify-around items-center mb-4">
             <div className="mr-4">
               <img

@@ -124,48 +124,38 @@ const MemeGenerator = () => {
           zIndex: -1,
         }}
       ></div>
-      <div
-        className="flex flex-col items-center"
-        style={{ textAlign: "center", padding: "20px" }}
-      >
+      <div className="flex flex-col items-center p-4">
         <HeadingGame />
-        <div className="flex justify-between items-center w-3/5 m-8">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish h-1/5"
-          />
-          <div>
-            <button
-              onClick={handleDownload}
-              className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-48 py-0.5 "
-            >
-              Download Meme
-            </button>
-          </div>
-          <div>
-            <button
-              onClick={handleAddText}
-              className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-36 py-0.5"
-            >
-              Add Text
-            </button>
-          </div>
-        </div>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center w-3/5 m-8">
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish h-1/5 mb-2 md:mb-0 md:mr-2"
+  />
+  <button
+    onClick={handleDownload}
+    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-48 py-0.5 mb-2 md:mb-0 md:mr-2"
+  >
+    Download Meme
+  </button>
+  <button
+    onClick={handleAddText}
+    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-36 py-0.5"
+  >
+    Add Text
+  </button>
+</div>
+
         <div
           ref={memeRef}
-          style={{
-            position: "relative",
-            display: "inline-block",
-            textAlign: "center",
-          }}
+          className="relative inline-block text-center w-full max-w-xl"
         >
           {(image || selectedTemplate) && (
             <img
               src={image || selectedTemplate.url}
               alt="Meme"
-              style={{ width: "500px", height: "auto" }}
+              className="w-full h-auto"
             />
           )}
           {texts.map((textObj, index) => (
@@ -173,15 +163,10 @@ const MemeGenerator = () => {
               key={index}
               defaultPosition={{ x: textObj.x, y: textObj.y }}
               onStop={(e, data) => handleDragStop(index, e, data)}
+              enableUserSelectHack={false}
             >
               <div
-                style={{
-                  position: "absolute",
-                  top: textObj.y,
-                  left: textObj.x,
-                  transform: "translate(-50%, -50%)",
-                  cursor: "move",
-                }}
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-move z-10"
                 onClick={() => setSelectedTextIndex(index)} // Set selected textarea on click
               >
                 <textarea
@@ -189,26 +174,15 @@ const MemeGenerator = () => {
                   placeholder="Text"
                   value={textObj.text}
                   onChange={(e) => handleTextChange(index, e.target.value)}
+                  className="w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text"
                   style={{
-                    width: "250px",
-                    height: "180px",
-                    resize: "both", // Ensure the textarea is resizable
-                    overflow: "auto", // Ensure scrollbars appear if needed
-                    background: "transparent",
-                    border: "none",
                     color: textObj.color,
                     fontFamily: textObj.font,
                     fontSize: textObj.size,
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    textShadow: "2px 2px 4px #000",
                   }}
                 />
                 {selectedTextIndex === index && ( // Show options only for selected textarea
-                  <div
-                    style={{ display: "flex", alignItems: "center" }}
-                    className="p-2"
-                  >
+                  <div className="flex items-center p-2">
                     <select
                       className="delete-btn"
                       value={textObj.font}
@@ -239,17 +213,7 @@ const MemeGenerator = () => {
                 )}
                 <button
                   onClick={() => handleDeleteText(index)}
-                  className="delete-btn"
-                  style={{
-                    marginLeft: "10px",
-                    cursor: "pointer",
-                    background: "red",
-                    border: "none",
-                    color: "white",
-                    fontSize: "1em",
-                    fontWeight: "bold",
-                    padding: "5px",
-                  }}
+                  className="delete-btn ml-2 cursor-pointer bg-red-600 text-white text-lg font-bold px-2"
                 >
                   X
                 </button>
@@ -257,36 +221,21 @@ const MemeGenerator = () => {
             </Draggable>
           ))}
         </div>
-        <div
-          className="flex flex-col content-around "
-          style={{ margin: "20px" }}
-        >
+        <div className="flex flex-col content-around mt-4 w-full">
           <div className="flex justify-center">
             <div className="w-fit h-fit text-center bg-gray m-6">
-              <h2 className="font-irish text-3xl antialiased font-bold  underline decoration-double">
+              <h2 className="font-irish text-3xl antialiased font-bold underline decoration-double">
                 Select a Template
               </h2>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
+          <div className="flex flex-wrap justify-center">
             {templates.map((template) => (
               <img
-                className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0"
+                className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
                 key={template.id}
                 src={template.url}
                 alt={template.name}
-                style={{
-                  width: "150px",
-                  marginRight: "20px",
-                  cursor: "pointer",
-                  marginLeft: "20px",
-                }}
                 onClick={() => handleTemplateSelect(template)}
               />
             ))}
