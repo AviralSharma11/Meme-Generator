@@ -5,11 +5,11 @@ import { toPng } from "html-to-image";
 import HeadingGame from "./HeadingGame";
 
 const MemeGenerator = () => {
-  const [texts, setTexts] = useState([]); // Initialize as an empty array
+  const [texts, setTexts] = useState([]);
   const [image, setImage] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [selectedTextIndex, setSelectedTextIndex] = useState(null); // State to track selected textarea
+  const [selectedTextIndex, setSelectedTextIndex] = useState(null);
   const memeRef = useRef(null);
 
   useEffect(() => {
@@ -63,7 +63,14 @@ const MemeGenerator = () => {
   const handleAddText = () => {
     setTexts([
       ...texts,
-      { text: "", x: 50, y: 50, font: "Arial", color: "#ffffff", size: "16px" },
+      {
+        text: "",
+        x: -100,
+        y: 10, 
+        font: "Arial",
+        color: "#ffffff",
+        size: "16px",
+      },
     ]);
   };
 
@@ -119,37 +126,55 @@ const MemeGenerator = () => {
         className="fixed top-0 left-0 w-full h-screen bg-center bg-cover"
         style={{
           backgroundImage:
-            "url('https://wallpapers.com/images/hd/meme-faces-black-and-white-25itfr6sfshhawly.jpg')",
+            "url('/Images/background-img.jpg')",
           opacity: 0.75,
           zIndex: -1,
         }}
       ></div>
-      <div className="flex flex-col items-center p-4">
+      <div className="flex flex-col items-center pb-4 px-4">
         <HeadingGame />
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center w-3/5 m-8">
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleImageUpload}
-    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish h-1/5 mb-2 md:mb-0 md:mr-2"
-  />
-  <button
-    onClick={handleDownload}
-    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-48 py-0.5 mb-2 md:mb-0 md:mr-2"
-  >
-    Download Meme
-  </button>
-  <button
-    onClick={handleAddText}
-    className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-36 py-0.5"
-  >
-    Add Text
-  </button>
-</div>
+        <div className="flex flex-col md:flex-row bg-white md:justify-around md:items-center w-[47%] p-1.5 ">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish h-1/5 mb-2 md:mb-0 md:mr-2"
+            style={{
+              hover: {
+                boxShadow:
+                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
+              },
+            }}
+          />
+          <button
+            onClick={handleDownload}
+            className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-48 py-0.5 mb-2 md:mb-0 md:mr-2"
+            style={{
+              hover: {
+                boxShadow:
+                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
+              },
+            }}
+          >
+            Download Meme
+          </button>
+          <button
+            onClick={handleAddText}
+            className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-36 py-0.5"
+            style={{
+              hover: {
+                boxShadow:
+                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
+              },
+            }}
+          >
+            Add Text
+          </button>
+        </div>
 
         <div
           ref={memeRef}
-          className="relative inline-block text-center w-full max-w-xl"
+          className="relative inline-block text-center bg-white  w-full max-w-xl mt-4"
         >
           {(image || selectedTemplate) && (
             <img
@@ -160,65 +185,67 @@ const MemeGenerator = () => {
           )}
           {texts.map((textObj, index) => (
             <Draggable
-              key={index}
-              defaultPosition={{ x: textObj.x, y: textObj.y }}
-              onStop={(e, data) => handleDragStop(index, e, data)}
-              enableUserSelectHack={false}
+            key={index}
+            defaultPosition={{ x: textObj.x, y: textObj.y }}
+            onStop={(e, data) => handleDragStop(index, e, data)}
+            enableUserSelectHack={false}
+          >
+            <div
+              className="absolute transform -translate-x-1/2 cursor-move z-10"
+              style={{ top: textObj.y, left: "50%" }}
+              onClick={() => setSelectedTextIndex(index)}
             >
-              <div
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-move z-10"
-                onClick={() => setSelectedTextIndex(index)} // Set selected textarea on click
+              <textarea
+                type="text"
+                placeholder="Text"
+                value={textObj.text}
+                onChange={(e) => handleTextChange(index, e.target.value)}
+                className="w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text"
+                style={{
+                  color: textObj.color,
+                  fontFamily: textObj.font,
+                  fontSize: textObj.size,
+                }}
+              />
+              {selectedTextIndex === index && (
+                <div className="flex items-center p-2">
+                  <select
+                    className="delete-btn"
+                    value={textObj.font}
+                    onChange={(e) => handleFontChange(index, e.target.value)}
+                  >
+                    <option value="Arial">Arial</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                  <input
+                    className="mx-2 delete-btn"
+                    type="color"
+                    value={textObj.color}
+                    onChange={(e) => handleColorChange(index, e.target.value)}
+                  />
+                  <input
+                    className="delete-btn"
+                    type="number"
+                    value={parseInt(textObj.size)}
+                    onChange={(e) =>
+                      handleSizeChange(index, `${e.target.value}px`)
+                    }
+                    style={{ width: "50px" }}
+                  />
+                </div>
+              )}
+              <button
+                onClick={() => handleDeleteText(index)}
+                className="delete-btn ml-2 cursor-pointer bg-red-600 text-white text-lg font-bold px-2"
               >
-                <textarea
-                  type="text"
-                  placeholder="Text"
-                  value={textObj.text}
-                  onChange={(e) => handleTextChange(index, e.target.value)}
-                  className="w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text"
-                  style={{
-                    color: textObj.color,
-                    fontFamily: textObj.font,
-                    fontSize: textObj.size,
-                  }}
-                />
-                {selectedTextIndex === index && ( // Show options only for selected textarea
-                  <div className="flex items-center p-2">
-                    <select
-                      className="delete-btn"
-                      value={textObj.font}
-                      onChange={(e) => handleFontChange(index, e.target.value)}
-                    >
-                      <option value="Arial">Arial</option>
-                      <option value="Courier New">Courier New</option>
-                      <option value="Georgia">Georgia</option>
-                      <option value="Times New Roman">Times New Roman</option>
-                      <option value="Verdana">Verdana</option>
-                    </select>
-                    <input
-                      className="mx-2 delete-btn"
-                      type="color"
-                      value={textObj.color}
-                      onChange={(e) => handleColorChange(index, e.target.value)}
-                    />
-                    <input
-                      className="delete-btn"
-                      type="number"
-                      value={parseInt(textObj.size)}
-                      onChange={(e) =>
-                        handleSizeChange(index, `${e.target.value}px`)
-                      }
-                      style={{ width: "50px" }}
-                    />
-                  </div>
-                )}
-                <button
-                  onClick={() => handleDeleteText(index)}
-                  className="delete-btn ml-2 cursor-pointer bg-red-600 text-white text-lg font-bold px-2"
-                >
-                  X
-                </button>
-              </div>
-            </Draggable>
+                X
+              </button>
+            </div>
+          </Draggable>
+          
           ))}
         </div>
         <div className="flex flex-col content-around mt-4 w-full">
@@ -229,7 +256,7 @@ const MemeGenerator = () => {
               </h2>
             </div>
           </div>
-          <div className="flex flex-wrap justify-center">
+          <div className="flex flex-wrap justify-center bg-white "  style={{background: "linear-gradient(to top , rgb(0, 0, 0) 0%, rgb(18, 0, 33) 100%)", clipPath: "polygon(100% 0% , 100% 100%,0 100%,0% 0%)", aspectRatio:"17/16"}}>
             {templates.map((template) => (
               <img
                 className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"

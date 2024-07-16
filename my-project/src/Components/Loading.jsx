@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function Loading() {
     return(
-        <div className=""></div>
+        <div className="bg-black w-screen h-screen"></div>
     );
 }
 
