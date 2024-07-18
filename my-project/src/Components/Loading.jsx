@@ -1,18 +1,16 @@
-import React from "react";
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-// const navigate = useNavigate();
+ function Loading () {
+  const navigate = useNavigate()
 
-// setTimeout(() => {
-//     navigate("/game");
-//   }, 1300);
-
-
-
-function Loading() {
-    return(
-        <div className="bg-black w-screen h-screen"></div>
-    );
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('/game')
+    }, 2000)
+  }, [])
+  return <div className="bg-black w-screen h-screen"></div>
 }
+
 
 export default Loading ;
