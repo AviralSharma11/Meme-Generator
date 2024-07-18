@@ -2,8 +2,8 @@ import React from "react";
 
 function HeadingGame(){
     return(
-        <div className="py-10">
-            <img src="/Images/Heading.jpg" className="h-56 rounded-bl-xl rounded-tr-xl " />
+        <div className="flex h-80 justify-center items-start w-screen" style={{background: "linear-gradient(to right , rgb(0, 0, 0) 0%, rgb(11, 2, 40) 100%)", clipPath: "polygon(100% 0%,100% 70%,0 100%,0% 0%)"}}>
+            <img src="/Images/MEME.jpg" className="h-36 mt-10" />
         </div>
     );
 }
