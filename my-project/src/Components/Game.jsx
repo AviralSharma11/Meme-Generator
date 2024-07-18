@@ -256,7 +256,11 @@ const MemeGenerator = () => {
               </h2>
             </div>
           </div>
+<<<<<<< HEAD
           <div className="flex flex-wrap justify-center bg-white "  style={{background: "linear-gradient(to top , rgb(0, 0, 0) 0%, rgb(11, 2, 40) 100%)", clipPath: "polygon(100% 0% , 100% 100%,0 100%,0% 0%)", aspectRatio:"17/16"}}>
+=======
+          <div className="flex flex-wrap justify-center bg-white "  style={{background: "linear-gradient(to top , rgb(0, 0, 0) 0%, rgb(18, 0, 33) 100%)", clipPath: "polygon(100% 0% , 100% 100%,0 100%,0% 0%)", aspectRatio:"17/16"}}>
+>>>>>>> e663d8206e34d71063fe066ad265050d32052c2e
             {templates.map((template) => (
               <img
                 className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
