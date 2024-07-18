@@ -18,15 +18,12 @@ function Homepage() {
   return (
     <div>
       {showVideo && (
-        <div
-          className="flex-shrink-1 fullscreen-video-container fixed z-40"
-          style={{ height: "1178.040px" }}
-        >
+        <div className="fixed z-40 w-full h-full">
           <video
-            className="fullscreen-video h-fit"
+            className="w-full h-full object-cover"
             src="/Videos/b.mp4"
             autoPlay
-            controls
+            muted
           />
         </div>
       )}
@@ -39,41 +36,40 @@ function Homepage() {
           zIndex: -1,
         }}
       ></div>
-      <div className="p-6 opacity-95 bg-black">
-      <HeaderHomepage />
+      <div className="p-6 bg-black opacity-95">
+        <HeaderHomepage />
       </div>
       <div className="w-screen flex items-center justify-center">
-        <div className="flex flex-col bg-white pt-4 " style={{ width: "900px" }}>
-          <div className="flex justify-around items-center px-4 mb-4">
-            <div className="mr-4">
+        <div className="flex flex-col bg-white pt-4 w-full max-w-5xl mx-4">
+          <div className="flex flex-col md:flex-row justify-around items-center px-4 mb-4">
+            <div className="mr-4 mb-4 md:mb-0">
               <img
                 src="https://i.pinimg.com/564x/d5/c9/71/d5c971c7b33fd55e3198941a120f0a67.jpg"
                 alt="Meme face 1"
-                className=""
-                style={{ height: "186px", width: "182px" }}
+                className="w-44 h-44 md:w-48 md:h-48"
               />
             </div>
             <div>
-              <p className="text-lg font-bold font-irish">
+              <p className="text-lg font-bold font-irish text-center md:text-left">
                 Yaha kuchh kuchh likhne ka socha h,
                 <br /> abhi itna emmdiate nhi socha h.
               </p>
             </div>
           </div>
 
-          <div className="mb-4 font-irish px-4 flex flex-row-reverse justify-between items-center">
-            <div className="text-right">
+          <div className="mb-4 font-irish px-4 flex flex-col md:flex-row-reverse justify-between items-center">
+            <div className="text-right mb-4 md:mb-0">
               <img
                 src="https://i.pinimg.com/564x/71/a1/e7/71a1e76b75910a507e9cdb276fb62628.jpg"
                 alt="Meme face 2"
-                className="w-615 h-682 inline-block"
+                className="w-44 h-44 md:w-48 md:h-48"
               />
             </div>
             <div>
-              <p className="font-bold text-2xl text-left font-irish">
+              <p className="font-bold text-2xl text-center md:text-left font-irish">
                 HOW IT WORKS
               </p>
-              <p className="text-left font-irish">
+              <p className="text-center md:text-left font-irish">
                 Samjhne ka koi reason nhi, sab samajh jaoge.
                 <br />
                 MEMES: Is jahan se aageke ATM ki sab set ho jayega aage bado
@@ -96,40 +92,36 @@ function Homepage() {
               Saamaan kuch samajh nahi aata, yeh kaunsi hai taqdeer (understand)
             </p>
           </div>
-          <div className="flex px-4 flex-row-reverse justify-between">
-            <div>
-              <p className="text-right font-irish pr-4">
+          <div className="flex flex-col md:flex-row px-4 justify-between items-center">
+            <div className="text-right mb-4 md:mb-0 md:order-2">
+              <p className="font-irish">
                 Lekin yeh chalte hain, yeh internet ka nasha (but)
                 <br />
                 Hasate hain, (cry) hain, yeh hai meme ka tamasha (drama)
               </p>
-              <h4 className="text-right py-4 font-irish">
-                ~GEMINI (Google ki pauti)
-              </h4>
+              <h4 className="py-4 font-irish">~GEMINI (Google ki pauti)</h4>
             </div>
 
-            <div className="flex mb-4">
-              <div className="mr-4">
-                <img
-                  className="float-left"
-                  src="https://i.pinimg.com/736x/f1/fd/e7/f1fde7eac3305de557a1e0b62f3eb943.jpg"
-                  alt="Meme face 3"
-                  style={{ height: "200px", width: "175px" }}
-                />
-              </div>
+            <div className="mb-4 md:mb-0 md:order-1">
+              <img
+                className="float-left"
+                src="https://i.pinimg.com/736x/f1/fd/e7/f1fde7eac3305de557a1e0b62f3eb943.jpg"
+                alt="Meme face 3"
+                className="w-44 h-44 md:w-48 md:h-48"
+              />
             </div>
           </div>
           <div className="flex justify-end px-4">
             <button
               type="button"
               onClick={handleContinueClick}
-              className={`btn relative mb-6 w-48 h-12 bg-black text-white font-irish font-bold text-lg rounded-bl-xl rounded-tr-xl shadow-lg cursor-pointer transition-all duration-800 ease-in-out transform hover:shadow-none focus:outline-none`}
+              className="btn relative mb-6 w-48 h-12 bg-black text-white font-irish font-bold text-lg rounded-bl-xl rounded-tr-xl shadow-lg cursor-pointer transition-all duration-800 ease-in-out transform hover:shadow-none focus:outline-none"
             >
               Continue
             </button>
           </div>
           <footer className="bg-gray-50 parallax-footer">
-            <div className="flex justify-between pt-0.5 px-5 font-irish font-medium">
+            <div className="flex flex-col md:flex-row justify-between pt-0.5 px-5 font-irish font-medium">
               <p className="font-semibold">
                 <span className="font-semibold text-xl">Contact us:</span>
                 <br /> Thikana toh hamara bhi nhi <br />
@@ -140,12 +132,13 @@ function Homepage() {
                   apraadh nhi !<br />
                 </div>
               </p>
-              <img src="/Images/Footer.jpg" className="h-64" />
+              <img src="/Images/Footer.jpg" className="h-64 w-full md:w-64 object-cover" />
             </div>
-            <div className="bg-black text-2xl pb-4 px-2 text-white font-irish" style={{width:"900px"}}><em>@Copyrights hai isme</em></div>
+            <div className="bg-black text-2xl pb-4 px-2 text-white font-irish w-full">
+              <em>@Copyrights hai isme</em>
+            </div>
           </footer>
         </div>
-        
       </div>
     </div>
   );
