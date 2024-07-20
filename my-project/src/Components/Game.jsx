@@ -11,6 +11,7 @@ const MemeGenerator = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [selectedTextIndex, setSelectedTextIndex] = useState(null);
   const memeRef = useRef(null);
+  const textRefs = useRef([]);
 
   useEffect(() => {
     axios
@@ -38,15 +39,10 @@ const MemeGenerator = () => {
     if (memeRef.current === null) {
       return;
     }
-    document
-      .querySelectorAll(".delete-btn")
-      .forEach((btn) => btn.classList.add("hidden"));
+    document.querySelectorAll(".delete-btn").forEach((btn) => btn.classList.add("hidden"));
     toPng(memeRef.current)
       .then((dataUrl) => {
-        document
-          .querySelectorAll(".delete-btn")
-          .forEach((btn) => btn.classList.remove("hidden"));
-
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.classList.remove("hidden"));
         const link = document.createElement("a");
         link.download = "meme.png";
         link.href = dataUrl;
@@ -54,9 +50,7 @@ const MemeGenerator = () => {
       })
       .catch((err) => {
         console.error("Failed to create image", err);
-        document
-          .querySelectorAll(".delete-btn")
-          .forEach((btn) => btn.classList.remove("hidden"));
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.classList.remove("hidden"));
       });
   };
 
@@ -65,32 +59,29 @@ const MemeGenerator = () => {
       ...texts,
       {
         text: "",
-        x: -100,
-        y: 10, 
+        x: -150,
+        y: 20,
         font: "Arial",
-        color: "#ffffff",
+        color: "black",
         size: "16px",
       },
     ]);
   };
 
   const handleTextChange = (index, newText) => {
-    const newTexts = texts.map((t, i) =>
-      i === index ? { ...t, text: newText } : t
-    );
-    setTexts(newTexts);
+    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, text: newText } : t)));
   };
 
   const handleDragStop = (index, e, data) => {
-    const newTexts = texts.map((t, i) =>
-      i === index ? { ...t, x: data.x, y: data.y } : t
-    );
-    setTexts(newTexts);
+    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, x: data.x, y: data.y } : t)));
+    setSelectedTextIndex(index);
+    if (textRefs.current[index]) {
+      textRefs.current[index].focus();
+    }
   };
 
   const handleDeleteText = (index) => {
-    const newTexts = texts.filter((_, i) => i !== index);
-    setTexts(newTexts);
+    setTexts((texts) => texts.filter((_, i) => i !== index));
   };
 
   const handleTemplateSelect = (template) => {
@@ -99,34 +90,44 @@ const MemeGenerator = () => {
     setTexts([]); // Clear texts when a new template is selected
   };
 
-  const handleFontChange = (index, newFont) => {
-    const newTexts = texts.map((t, i) =>
-      i === index ? { ...t, font: newFont } : t
-    );
-    setTexts(newTexts);
-  };
+
 
   const handleColorChange = (index, newColor) => {
-    const newTexts = texts.map((t, i) =>
-      i === index ? { ...t, color: newColor } : t
-    );
-    setTexts(newTexts);
+    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, color: newColor } : t)));
   };
 
   const handleSizeChange = (index, newSize) => {
-    const newTexts = texts.map((t, i) =>
-      i === index ? { ...t, size: newSize } : t
-    );
-    setTexts(newTexts);
+    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, size: newSize } : t)));
   };
+
+  const handleTextareaFocus = (index) => {
+    setSelectedTextIndex(index);
+    document.querySelectorAll(".draggable-textarea").forEach((textarea) => {
+      textarea.draggable = false;
+    });
+  };
+
+  const handleTextareaBlur = () => {
+    setSelectedTextIndex(null);
+    document.querySelectorAll(".draggable-textarea").forEach((textarea) => {
+      textarea.draggable = true;
+    });
+  };
+
+  
+
+
+
+ 
+
+
 
   return (
     <>
       <div
         className="fixed top-0 left-0 w-full h-screen bg-center bg-cover"
         style={{
-          backgroundImage:
-            "url('/Images/background-img.jpg')",
+          backgroundImage: "url('/Images/background-img.jpg')",
           opacity: 0.75,
           zIndex: -1,
         }}
@@ -139,34 +140,16 @@ const MemeGenerator = () => {
             accept="image/*"
             onChange={handleImageUpload}
             className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish h-1/5 mb-2 md:mb-0 md:mr-2"
-            style={{
-              hover: {
-                boxShadow:
-                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
-              },
-            }}
           />
           <button
             onClick={handleDownload}
             className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-48 py-0.5 mb-2 md:mb-0 md:mr-2"
-            style={{
-              hover: {
-                boxShadow:
-                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
-              },
-            }}
           >
             Download Meme
           </button>
           <button
             onClick={handleAddText}
             className="btn rounded-bl-xl rounded-tr-xl bg-black text-white font-irish w-full md:w-36 py-0.5"
-            style={{
-              hover: {
-                boxShadow:
-                  "0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19)",
-              },
-            }}
           >
             Add Text
           </button>
@@ -174,7 +157,7 @@ const MemeGenerator = () => {
 
         <div
           ref={memeRef}
-          className="relative inline-block text-center bg-white  w-full max-w-xl mt-4"
+          className="relative inline-block text-center bg-white w-full max-w-xl mt-4"
         >
           {(image || selectedTemplate) && (
             <img
@@ -185,67 +168,61 @@ const MemeGenerator = () => {
           )}
           {texts.map((textObj, index) => (
             <Draggable
-            key={index}
-            defaultPosition={{ x: textObj.x, y: textObj.y }}
-            onStop={(e, data) => handleDragStop(index, e, data)}
-            enableUserSelectHack={false}
-          >
-            <div
-              className="absolute transform -translate-x-1/2 cursor-move z-10"
-              style={{ top: textObj.y, left: "50%" }}
-              onClick={() => setSelectedTextIndex(index)}
+              key={index}
+              defaultPosition={{ x: textObj.x, y: textObj.y }}
+              onStop={(e, data) => handleDragStop(index, e, data)}
+              enableUserSelectHack={false}
             >
-              <textarea
-                type="text"
-                placeholder="Text"
-                value={textObj.text}
-                onChange={(e) => handleTextChange(index, e.target.value)}
-                className="w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text"
-                style={{
-                  color: textObj.color,
-                  fontFamily: textObj.font,
-                  fontSize: textObj.size,
-                }}
-              />
-              {selectedTextIndex === index && (
-                <div className="flex items-center p-2">
-                  <select
-                    className="delete-btn"
-                    value={textObj.font}
-                    onChange={(e) => handleFontChange(index, e.target.value)}
-                  >
-                    <option value="Arial">Arial</option>
-                    <option value="Courier New">Courier New</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Verdana">Verdana</option>
-                  </select>
-                  <input
-                    className="mx-2 delete-btn"
-                    type="color"
-                    value={textObj.color}
-                    onChange={(e) => handleColorChange(index, e.target.value)}
-                  />
-                  <input
-                    className="delete-btn"
-                    type="number"
-                    value={parseInt(textObj.size)}
-                    onChange={(e) =>
-                      handleSizeChange(index, `${e.target.value}px`)
-                    }
-                    style={{ width: "50px" }}
-                  />
-                </div>
-              )}
-              <button
-                onClick={() => handleDeleteText(index)}
-                className="delete-btn ml-2 cursor-pointer bg-red-600 text-white text-lg font-bold px-2"
+              <div
+                className="absolute transform -translate-x-1/2 cursor-move"
+                style={{ top: textObj.y, left: "50%" }}
+                onClick={() => setSelectedTextIndex(index)}
               >
-                X
-              </button>
-            </div>
-          </Draggable>
-          
+                <textarea
+                  type="text"
+                  placeholder="Text"
+                  value={textObj.text}
+                  onChange={(e) => handleTextChange(index, e.target.value)}
+                  onFocus={() => handleTextareaFocus(index)}
+                  onBlur={handleTextareaBlur}
+                  className="draggable-textarea w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text z-20"
+                  ref={(el) => (textRefs.current[index] = el)}
+                  style={{
+                    color: textObj.color,
+                    fontFamily: textObj.font,
+                    fontSize: textObj.size,
+                    zIndex: selectedTextIndex === index ? 10 : 1,
+                  }}
+                />
+                <button
+                  onClick={() => handleDeleteText(index)}
+                  onTouchEnd={() => handleDeleteText(index)}
+                  className="delete-btn absolute -top-4 -right-4 bg-red-500 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center"
+                >
+                  X
+                </button>
+                <div className="text-options absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-transparent p-2 rounded shadow-lg z-30">
+                  <div className="flex justify-around h-fit w-fit delete-btn">
+                    <input
+                      type="color"
+                      value={textObj.color}
+                      onInput={(e) => handleColorChange(index, e.target.value)}
+ 
+                      className="ml-2 delete-btn w-16"
+                    />
+                    <input
+                      type="number"
+                      value={textObj.size.replace("px", "")}
+                      onInput={(e) => handleSizeChange(index, `${e.target.value}px`)}
+
+                      className="ml-2 delete-btn w-16"
+                    />
+                  </div>
+                </div>
+             
+
+              </div>
+            </Draggable>
           ))}
         </div>
         <div className="flex flex-col content-around mt-4 w-full">
@@ -256,7 +233,15 @@ const MemeGenerator = () => {
               </h2>
             </div>
           </div>
-          <div className="flex flex-wrap justify-center bg-white "  style={{background: "linear-gradient(to top , rgb(0, 0, 0) 0%, rgb(18, 0, 33) 100%)", clipPath: "polygon(100% 0% , 100% 100%,0 100%,0% 0%)", aspectRatio:"17/16"}}>
+          <div
+            className="flex flex-wrap justify-center bg-white"
+            style={{
+              background:
+                "linear-gradient(to top , rgb(0, 0, 0) 0%, rgb(18, 0, 33) 100%)",
+              clipPath: "polygon(100% 0% , 100% 100%,0 100%,0% 0%)",
+              aspectRatio: "17/16",
+            }}
+          >
             {templates.map((template) => (
               <img
                 className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"

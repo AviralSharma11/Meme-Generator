@@ -104,10 +104,9 @@ function Homepage() {
 
             <div className="mb-4 md:mb-0 md:order-1">
               <img
-                className="float-left"
                 src="https://i.pinimg.com/736x/f1/fd/e7/f1fde7eac3305de557a1e0b62f3eb943.jpg"
                 alt="Meme face 3"
-                className="w-44 h-44 md:w-48 md:h-48"
+                className="w-44 h-44 md:w-48 md:h-48 float-left"
               />
             </div>
           </div>
