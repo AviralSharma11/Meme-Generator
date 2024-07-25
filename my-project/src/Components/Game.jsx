@@ -113,15 +113,7 @@ const MemeGenerator = () => {
       textarea.draggable = true;
     });
   };
-
-  
-
-
-
  
-
-
-
   return (
     <>
       <div
@@ -166,6 +158,7 @@ const MemeGenerator = () => {
               className="w-full h-auto"
             />
           )}
+          
           {texts.map((textObj, index) => (
             <Draggable
               key={index}
@@ -207,24 +200,23 @@ const MemeGenerator = () => {
                       type="color"
                       value={textObj.color}
                       onInput={(e) => handleColorChange(index, e.target.value)}
- 
+                      onChange={(e) => handleColorChange(index, e.target.value)}
                       className="ml-2 delete-btn w-16"
                     />
                     <input
                       type="number"
                       value={textObj.size.replace("px", "")}
                       onInput={(e) => handleSizeChange(index, `${e.target.value}px`)}
-
+                      onChange={(e) => handleSizeChange(index, e.target.value)}
                       className="ml-2 delete-btn w-16"
                     />
                   </div>
                 </div>
-             
-
               </div>
             </Draggable>
           ))}
         </div>
+
         <div className="flex flex-col content-around mt-4 w-full">
           <div className="flex justify-center">
             <div className="w-fit h-fit text-center bg-gray m-6">
@@ -244,7 +236,7 @@ const MemeGenerator = () => {
           >
             {templates.map((template) => (
               <img
-                className="border-2 border-black my-2 h-48 w-36 hover:animate-bounce active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
+                className="border-2 border-black my-2 h-48 w-36 transition ease-in-out hover:-translate-y-1 hover:scale-150 delay-150 active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
                 key={template.id}
                 src={template.url}
                 alt={template.name}
