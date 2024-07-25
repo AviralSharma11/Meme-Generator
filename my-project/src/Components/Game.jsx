@@ -10,6 +10,7 @@ const MemeGenerator = () => {
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [selectedTextIndex, setSelectedTextIndex] = useState(null);
+  const [filter, setFilter] = useState('');
   const memeRef = useRef(null);
   const textRefs = useRef([]);
 
@@ -113,6 +114,10 @@ const MemeGenerator = () => {
       textarea.draggable = true;
     });
   };
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
  
   return (
     <>
@@ -149,13 +154,80 @@ const MemeGenerator = () => {
 
         <div
           ref={memeRef}
-          className="relative inline-block text-center bg-white w-full max-w-xl mt-4"
+          className="relative inline-block text-center flex bg-white w-full max-w-xl mt-4"
         >
+      {/* Toolbar */}
+      <div className="right-0 top-0 h-full flex flex-col bg-white items-center space-y-8 p-4">
+        {/* Filters */}
+
+        <label className="inline-flex items-center mr-4">
+                    <button
+                      name="filter"
+                      value=""
+                      onClick={() => handleFilterChange({ target: { value: '' } })}
+                      className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black"
+                    >
+                     None
+                    </button>
+                  </label>
+                  <label className="inline-flex items-center mr-4">
+                  <button
+                    name="filter"
+                    value="grayscale(100%)"
+                    onClick={() => handleFilterChange({ target: { value: 'grayscale(100%)' } })}
+                    className="bg-black text-white rounded px-4 py-2 hover:bg-gray-400 hover:text-black"
+                  >
+                    Grayscale
+                  </button>
+                  </label>
+                  <label className="inline-flex items-center mr-4">
+                  <button
+                    name="filter"
+                    value="sepia(100%)"
+                    onClick={() => handleFilterChange({ target: { value: 'sepia(100%)' } })}
+                    className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black"
+                  >
+                    Sepia
+                  </button>
+                  </label>
+                  <label className="inline-flex items-center mr-4">
+                  <button
+                    name="filter"
+                    value="blur(5px)"
+                    onClick={() => handleFilterChange({ target: { value: 'blur(5px)' } })}
+                    className="bg-black text-white rounded px-9 py-2 hover:bg-gray-400 hover:text-black"
+                  >
+                    Blur
+                  </button>
+                  </label>
+                  <label className="inline-flex items-center mr-4">
+                    <button
+                    name="filter"
+                    value="brightness(150%)"
+                    onClick={() => handleFilterChange({ target: { value: 'brightness(150%)' } })}
+                    className="bg-black text-white rounded px-3 py-2 hover:bg-gray-400 hover:text-black"
+                  >
+                    Brightness
+                  </button>
+                  </label>
+                  <label className="inline-flex items-center mr-4">
+                    <button
+                    name="filter"
+                    value="contrast(200%)"
+                    onClick={() => handleFilterChange({ target: { value: 'contrast(200%)' } })}
+                    className="bg-black text-white rounded px-5 py-2 hover:bg-gray-400 hover:text-black"
+                  >
+                    Contrast
+                  </button>
+                  </label>
+      </div>
+    
           {(image || selectedTemplate) && (
             <img
               src={image || selectedTemplate.url}
               alt="Meme"
               className="w-full h-auto"
+              style={{ filter }}
             />
           )}
           
@@ -210,6 +282,8 @@ const MemeGenerator = () => {
                       onChange={(e) => handleSizeChange(index, e.target.value)}
                       className="ml-2 delete-btn w-16"
                     />
+
+                    
                   </div>
                 </div>
               </div>
@@ -236,7 +310,7 @@ const MemeGenerator = () => {
           >
             {templates.map((template) => (
               <img
-                className="border-2 border-black my-2 h-48 w-36 transition ease-in-out hover:-translate-y-1 hover:scale-150 delay-150 active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
+                className="border-2 border-black my-2 h-48 w-36 transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-150 active:opacity-0 w-36 h-48 my-2 mx-4 cursor-pointer"
                 key={template.id}
                 src={template.url}
                 alt={template.name}
