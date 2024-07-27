@@ -28,11 +28,7 @@ function HeaderHomepage() {
           <div className="font-semibold hover:text-blue-400">
             <a href="#" onClick={toggleModal}>Instructions</a>
           </div>
-<<<<<<< HEAD
           <div className="ml-10 font-semibold hover:text-red-700">
-=======
-          <div className="mr-10 font-semibold hover:text-red-700">
->>>>>>> 2cfb0460000594144cc4bb045d804c04fea626a7
             
             <a href="#" onClick={handleSignoutClick}>Sign Out</a>
           </div>
@@ -54,7 +50,7 @@ function HeaderHomepage() {
         </video>
       </div>
 
-      {isModalOpen && (
+       {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg w-96 h-96 overflow-auto">
                         <h2 className="text-xl font-bold mb-4">Instructions</h2>
