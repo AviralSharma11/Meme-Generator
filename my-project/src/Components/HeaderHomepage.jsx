@@ -1,27 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 function HeaderHomepage() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleHomeClick = () => {
-    navigate("/");
+    navigate("/homepage");
   };
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+  
+  const handleSignoutClick = () => {
+    navigate("/");
   };
 
   return (
     <div>
       <nav className="flex bg-gray-200 justify-between px-10 py-2 items-center">
         <div className="flex gap-4 py-4 justify-around items-center">
-          <div className="mr-10 font-semibold">
+          <div className="mr-10 font-semibold hover:text-blue-400">
             <a href="#" onClick={handleHomeClick}>Home</a>
           </div>
-          <div className="font-semibold">
+          <div className="font-semibold hover:text-blue-400">
             <a href="#" onClick={toggleModal}>Instructions</a>
+          </div>
+          <div className="mr-10 font-semibold hover:text-red-700">
+            
+            <a href="#" onClick={handleSignoutClick}>Sign Out</a>
           </div>
         </div>
         <div className="flex">
