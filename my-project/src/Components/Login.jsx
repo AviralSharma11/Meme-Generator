@@ -57,12 +57,23 @@ export default function Login() {
             {loginStatus === true && (
               <p className="text-success">You Are Logged in Successfully</p>
             )}
+<<<<<<< HEAD
              <Form.Group controlId="formBasicEmail">
               <Form.Label>User address : </Form.Label>
               <Form.Control
                 type="text"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Type here(eg:user)"
+=======
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>User address : </Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Type here(eg:user@meme)"
+>>>>>>> 2cfb0460000594144cc4bb045d804c04fea626a7
               />
             </Form.Group>
             <br />
@@ -88,8 +99,13 @@ export default function Login() {
           </Form>
         </div>
         <br />
+<<<<<<< HEAD
         <a href="/signup" className="">
           <span className="text-black font-semibold">Don't have an account?</span><br/> <span className="signup-link underline">Sign up</span>
+=======
+        <a href="/signup" className="signup-link">
+          Don't have an account? Sign up
+>>>>>>> 2cfb0460000594144cc4bb045d804c04fea626a7
         </a>
         <br />
       

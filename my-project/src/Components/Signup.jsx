@@ -57,9 +57,17 @@ export default function Signup() {
             <Form.Group controlId="formBasicEmail">
               <Form.Label>User address : </Form.Label>
               <Form.Control
+<<<<<<< HEAD
                 type="text"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Type here(eg:user)"
+=======
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Type here(eg:user@meme)"
+>>>>>>> 2cfb0460000594144cc4bb045d804c04fea626a7
               />
             </Form.Group>
             <br />
@@ -86,7 +94,11 @@ export default function Signup() {
           </Form>
           <br />
           <a className="signup-link" href="/">
+<<<<<<< HEAD
           <span className="text-black">Already have an account?</span><br/><span className="underline"> Login</span>
+=======
+            Already have an account? Login
+>>>>>>> 2cfb0460000594144cc4bb045d804c04fea626a7
           </a>
         </div>
       </div>
