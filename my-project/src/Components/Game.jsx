@@ -310,7 +310,7 @@ const MemeGenerator = () => {
                     onChange={(e) => handleTextChange(index, e.target.value)}
                     onFocus={() => handleTextareaFocus(index)}
                     onBlur={handleTextareaBlur}
-                    className="draggable-textarea w-64 h-36 resize overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text z-20"
+                    className="draggable-textarea w-64 h-36 overflow-auto bg-transparent border-none text-center font-bold text-white shadow-text z-20"
                     ref={(el) => (textRefs.current[index] = el)}
                     style={{
                       color: textObj.color,
