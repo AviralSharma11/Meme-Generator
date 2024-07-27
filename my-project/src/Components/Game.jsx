@@ -4,6 +4,32 @@ import Draggable from "react-draggable";
 import { toPng } from "html-to-image";
 import HeadingGame from "./HeadingGame";
 
+const FilterMenu = ({ isFilterMenuOpen, filterMenuRef, handleFilterChange }) => {
+  if (!isFilterMenuOpen) return null;
+  return (
+    <div
+      ref={filterMenuRef}
+      className="absolute -bottom-40 right-0 bg-white p-4 rounded-lg shadow-lg flex flex-col space-y-4 z-50"
+    >
+      {["None", "Grayscale", "Sepia", "Blur", "Brightness", "Contrast"].map(
+        (filter, index) => (
+          <button
+            key={index}
+            onClick={() =>
+              handleFilterChange(
+                filter === "None" ? "" : `${filter.toLowerCase()}(100%)`
+              )
+            }
+            className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black z-30"
+          >
+            {filter}
+          </button>
+        )
+      )}
+    </div>
+  );
+};
+
 const MemeGenerator = () => {
   const [texts, setTexts] = useState([]);
   const [image, setImage] = useState(null);
@@ -11,9 +37,10 @@ const MemeGenerator = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [selectedTextIndex, setSelectedTextIndex] = useState(null);
   const [filter, setFilter] = useState('');
-  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false); // State to control filter menu visibility
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const memeRef = useRef(null);
   const textRefs = useRef([]);
+  const filterMenuRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -26,13 +53,26 @@ const MemeGenerator = () => {
       .catch((error) => console.error("Error fetching meme templates:", error));
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target)) {
+        setIsFilterMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result);
       setSelectedTemplate(null);
-      setTexts([]); // Clear texts when a new image is uploaded
+      setTexts([]);
     };
     reader.readAsDataURL(file);
   };
@@ -89,7 +129,7 @@ const MemeGenerator = () => {
   const handleTemplateSelect = (template) => {
     setSelectedTemplate(template);
     setImage(null);
-    setTexts([]); // Clear texts when a new template is selected
+    setTexts([]);
   };
 
   const handleColorChange = (index, newColor) => {
@@ -97,7 +137,7 @@ const MemeGenerator = () => {
   };
 
   const handleSizeChange = (index, newSize) => {
-    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, size: newSize } : t)));
+    setTexts((texts) => texts.map((t, i) => (i === index ? { ...t, size: `${newSize}px` } : t)));
   };
 
   const handleTextareaFocus = (index) => {
@@ -114,12 +154,20 @@ const MemeGenerator = () => {
     });
   };
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
+  const handleFilterChange = (value) => {
+    setFilter(value);
+    setIsFilterMenuOpen(false);
   };
 
   const toggleFilterMenu = () => {
     setIsFilterMenuOpen(!isFilterMenuOpen);
+  };
+
+  const handleDiscardChanges = () => {
+    setImage(null);
+    setSelectedTemplate(null);
+    setTexts([]);
+    setFilter('');
   };
 
   return (
@@ -134,15 +182,15 @@ const MemeGenerator = () => {
       ></div>
       <div className="flex flex-col items-center pb-4 px-4">
         <HeadingGame />
-        <div className="flex flex-col md:flex-row bg-white md:justify-around md:items-center w-[47%] p-1.5 ">
+        <div className="flex flex-col md:flex-row bg-white md:justify-around md:items-center w-[90%] lg:w-[47%] p-1.5">
           <input
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish h-1/5 mb-2 md:mb-0 md:mr-2"
+            className="btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish mb-2 md:mb-0 md:mr-2 p-2 w-full"
           />
           <button
-            className={`btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish w-full md:w-48 py-0.5 mb-2 md:mb-0 md:mr-2 ${
+            className={`btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish mb-2 md:mb-0 md:mr-2 p-2 w-full ${
               !image && !selectedTemplate ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             onClick={handleDownload}
@@ -151,7 +199,7 @@ const MemeGenerator = () => {
             Download Meme
           </button>
           <button
-            className={`btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish w-full md:w-36 py-0.5 ${
+            className={`btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish p-2 w-full ${
               !image && !selectedTemplate ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             onClick={handleAddText}
@@ -160,78 +208,86 @@ const MemeGenerator = () => {
             Add Text
           </button>
         </div>
-
+        <div className="relative flex justify-around items-center bg-white px-1 w-full md:w-auto">
+          <button
+            className={`btn rounded-bl-xl hover:bg-gray-400 mr-4 hover:text-black rounded-tr-xl bg-black text-white font-irish p-2 w-full md:w-auto ${
+              !image && !selectedTemplate ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            onClick={handleDiscardChanges}
+            disabled={!image && !selectedTemplate}
+          >
+            Discard Changes
+          </button>
+          <button
+            onClick={toggleFilterMenu}
+            className="btn rounded-bl-xl hover:bg-gray-400 hover:text-black rounded-tr-xl bg-black text-white font-irish p-2 w-full md:w-auto"
+          >
+            ☰ Filters
+          </button>
+          {isFilterMenuOpen && (
+          <div ref={filterMenuRef} className="absolute -bottom-40 right-0 bg-white p-4 rounded-lg shadow-lg flex flex-col space-y-4 z-50">
+            <button
+              name="filter"
+              value=""
+              onClick={() => handleFilterChange('')}
+              className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              None
+            </button>
+            <button
+              name="filter"
+              value="grayscale(100%)"
+              onClick={() => handleFilterChange('grayscale(100%)')}
+              className="bg-black text-white rounded px-4 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              Grayscale
+            </button>
+            <button
+              name="filter"
+              value="sepia(100%)"
+              onClick={() => handleFilterChange('sepia(100%)')}
+              className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              Sepia
+            </button>
+            <button
+              name="filter"
+              value="blur(5px)"
+              onClick={() => handleFilterChange('blur(5px)')}
+              className="bg-black text-white rounded px-9 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              Blur
+            </button>
+            <button
+              name="filter"
+              value="brightness(150%)"
+              onClick={() => handleFilterChange('brightness(150%)')}
+              className="bg-black text-white rounded px-7 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              Brightness
+            </button>
+            <button
+              name="filter"
+              value="contrast(200%)"
+              onClick={() => handleFilterChange('contrast(200%)')}
+              className="bg-black text-white rounded px-5 py-2 hover:bg-gray-400 hover:text-black z-30"
+            >
+              Contrast
+            </button>
+          </div>
+        )}
+        </div>
         <div className="flex flex-col md:flex-row w-full mt-4">
           {/* Meme Editor */}
           <div
             ref={memeRef}
             className="relative flex flex-col items-center bg-white w-full md:w-1/2 max-h-screen overflow-auto"
           >
-            <div className="absolute top-0 right-0 p-4 bg-white rounded-lg shadow-lg">
-              <button
-                onClick={toggleFilterMenu}
-                className="delete-btn bg-black text-white rounded px-4 py-2 hover:bg-gray-400 hover:text-black"
-              >
-                ☰
-              </button>
-              {isFilterMenuOpen && (
-                <div className="absolute top-12 right-0 bg-white p-4 rounded-lg shadow-lg flex flex-col space-y-4">
-                  <button
-                    name="filter"
-                    value=""
-                    onClick={() => handleFilterChange({ target: { value: '' } })}
-                    className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    None
-                  </button>
-                  <button
-                    name="filter"
-                    value="grayscale(100%)"
-                    onClick={() => handleFilterChange({ target: { value: 'grayscale(100%)' } })}
-                    className="bg-black text-white rounded px-4 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    Grayscale
-                  </button>
-                  <button
-                    name="filter"
-                    value="sepia(100%)"
-                    onClick={() => handleFilterChange({ target: { value: 'sepia(100%)' } })}
-                    className="bg-black text-white rounded px-8 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    Sepia
-                  </button>
-                  <button
-                    name="filter"
-                    value="blur(5px)"
-                    onClick={() => handleFilterChange({ target: { value: 'blur(5px)' } })}
-                    className="bg-black text-white rounded px-9 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    Blur
-                  </button>
-                  <button
-                    name="filter"
-                    value="brightness(150%)"
-                    onClick={() => handleFilterChange({ target: { value: 'brightness(150%)' } })}
-                    className="bg-black text-white rounded px-3 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    Brightness
-                  </button>
-                  <button
-                    name="filter"
-                    value="contrast(200%)"
-                    onClick={() => handleFilterChange({ target: { value: 'contrast(200%)' } })}
-                    className="bg-black text-white rounded px-5 py-2 hover:bg-gray-400 hover:text-black"
-                  >
-                    Contrast
-                  </button>
-                </div>
-              )}
-            </div>
             {(image || selectedTemplate) && (
               <img
                 src={image || selectedTemplate.url}
                 alt="Meme"
-                className="w-full h-[100vh]"
+                className="w-full max-h-[100vh]"
                 style={{ filter }}
               />
             )}
@@ -281,8 +337,8 @@ const MemeGenerator = () => {
                       />
                       <input
                         type="number"
-                        value={textObj.size.replace("px", "")}
-                        onInput={(e) => handleSizeChange(index, `${e.target.value}px`)}
+                        value={parseInt(textObj.size)}
+                        onInput={(e) => handleSizeChange(index, e.target.value)}
                         onChange={(e) => handleSizeChange(index, e.target.value)}
                         className="ml-2 delete-btn w-16"
                       />

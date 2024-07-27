@@ -11,7 +11,7 @@ function Homepage() {
   const handleContinueClick = () => {
     setShowVideo(true);
     setTimeout(() => {
-      navigate("/loading");
+      navigate("/game");
     }, 1300);
   };
 
@@ -36,7 +36,7 @@ function Homepage() {
           zIndex: -1,
         }}
       ></div>
-      <div className="p-6 bg-black opacity-95">
+      <div className="bg-black opacity-95">
         <HeaderHomepage />
       </div>
       <div className="w-screen flex items-center justify-center">
@@ -131,7 +131,7 @@ function Homepage() {
                   apraadh nhi !<br />
                 </div>
               </p>
-              <img src="/Images/Footer.jpg" className="h-64 w-full md:w-64 object-cover" />
+              <img src="/Images/Footer.jpg" className="h-64 w-full md:w-64 object-cover" alt=""/>
             </div>
             <div className="bg-black text-2xl pb-4 px-2 text-white font-irish w-full">
               <em>@Copyrights hai isme</em>
